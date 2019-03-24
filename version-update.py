@@ -40,13 +40,26 @@ def retrieve_labels_from_merge_request(merge_request_id):
 
     return merge_request.labels
 
-def bump(latest):
-    merge_request_id = extract_merge_request_id_from_commit()
-    labels = retrieve_labels_from_merge_request(merge_request_id)
+def get_bump_tag_from_merge_message():
+    message = git("log", "-1", "--pretty=%B")
+    matches = re.search(r'(-bump-minor-|-bump-major-)', message.decode("utf-8"), re.M|re.I)
+    if matches == None:
+        return []
+    return matches.group(2)
 
-    if "bump-minor" in labels:
+
+def bump(latest):
+    try:
+        # Try to use the merge request labels
+        merge_request_id = extract_merge_request_id_from_commit()
+        labels = retrieve_labels_from_merge_request(merge_request_id)
+    except:
+        # Mege request labels didn't work (maybe there wasn't a merge request)
+        labels = get_bump_tag_from_merge_message()
+
+    if "bump-minor" in labels or "-bump-minor-" in labels:
         return semver.bump_minor(latest)
-    elif "bump-major" in labels:
+    elif "bump-major" in labels or "-bump-major-" in labels:
         return semver.bump_major(latest)
     else:
         return semver.bump_patch(latest)

@@ -6,9 +6,9 @@ Visit [semver.org](https://semver.org/) to read more about semantic versioning.
 
 ## How is the version determined?
 
-Versions are being maintained using git tags.
+Versions are being maintained using git tags OR by merge comment.
 
-If no git tag is available, the first version update will result in version 1.0.0.
+If no git tag or comment is available, the first version update will result in version 1.0.0.
 If git tags are available, it will determine whether to do a major, minor, or patch update based on specific merge request labels. The `bump-minor` and `bump-major` labels exist to do either a minor or major bump. If a merge request has no labels attached, it will perform a patch update by default.
 
 ## Prerequisites
@@ -89,6 +89,10 @@ tag-latest:
   only:
     - tag
 ```
+## Merge comment instructions
+
+If you are manually merging (without a merge request in gitlab) then do this.
+When commiting the merge, in the comment add -bump-minor- or -bump-major- to bump the appropriate level. Otherwise the patch level is bumped. For my projects, we prefix the merge with the level (but it can be anywhere in the comment.)
 
 ## Merge request instructions
 
