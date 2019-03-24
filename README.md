@@ -71,7 +71,7 @@ generate-env-vars:
 
 version:
   stage: version
-  image: mrooding/gitlab-semantic-versioning:1.0.0
+  image: ericschultz/gitlab-semantic-versioning:latest
   script:
     - python3 /version-update/version-update.py
   only:
