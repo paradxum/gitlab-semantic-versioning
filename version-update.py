@@ -66,16 +66,19 @@ def bump(latest):
 
 def tag_repo(tag):
     repository_url = os.environ["CI_REPOSITORY_URL"]
-    username = os.environ["NPA_USERNAME"]
-    password = os.environ["NPA_PASSWORD"]
+    with open("~/.netrc","w") as f:
+        f.write("machine %s\n\tlogin %s\n\tpassword %s\n"%(os.environ["CI_SERVER_HOST"],os.environ["NPA_USERNAME"],os.environ["NPA_PASSWORD"]))
 
-    push_url = re.sub(r'([a-z]+://)[^@]*(@.*)', "\\g<1>%s:%s\\g<2>"%(username,password), repository_url)
-    git("remote", "set-url", "--push", "origin", push_url)
+    print(repository_url)
+    with open("~/.netrc","r") as f:
+        print(f.read())
+
+    git("remote", "set-url", "--push", "origin", repository_url)
     git("tag", tag)
     git("push", "origin", tag)        
 
 def main():
-    env_list = ["CI_REPOSITORY_URL", "CI_PROJECT_ID", "CI_PROJECT_URL", "CI_PROJECT_PATH", "NPA_USERNAME", "NPA_PASSWORD"]
+    env_list = ["CI_REPOSITORY_URL", "CI_PROJECT_ID", "CI_PROJECT_URL", "CI_PROJECT_PATH", "NPA_USERNAME", "NPA_PASSWORD", "CI_SERVER_HOST"]
     [verify_env_var_presence(e) for e in env_list]
 
     try:
