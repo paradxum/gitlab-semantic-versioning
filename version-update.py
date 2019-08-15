@@ -24,7 +24,7 @@ def extract_merge_request_id_from_commit():
     matches = re.search(r'(\S*\/\S*!)(\d)', message.decode("utf-8"), re.M|re.I)
     
     if matches == None:
-        raise Exception(f"Unable to extract merge request from commit message: {message}")
+        raise Exception("Unable to extract merge request from commit message: {message}")
 
     return matches.group(2)
 
@@ -69,8 +69,7 @@ def tag_repo(tag):
     username = os.environ["NPA_USERNAME"]
     password = os.environ["NPA_PASSWORD"]
 
-    push_url = re.sub(r'([a-z]+://)[^@]*(@.*)', rf'\g<1>{username}:{password}\g<2>', repository_url)
-
+    push_url = re.sub(r'([a-z]+://)[^@]*(@.*)', "\\g<1>%s:%s\\g<2>"%(username,password), repository_url)
     git("remote", "set-url", "--push", "origin", push_url)
     git("tag", tag)
     git("push", "origin", tag)        
