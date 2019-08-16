@@ -12,6 +12,8 @@ def git(*args):
 def verify_env_var_presence(name):
     if name not in os.environ:
         raise Exception(f"Expected the following environment variable to be set: {name}")
+    print(name)
+    print(os.environ[name])
 
 def extract_gitlab_url_from_project_url():
     project_url = os.environ['CI_PROJECT_URL']
@@ -65,7 +67,7 @@ def bump(latest):
         return semver.bump_patch(latest)
 
 def tag_repo(tag):
-    repository_url = os.environ["CI_REPOSITORY_URL"]
+    repository_url = re.sub('^(.*//).*@',r'\1',os.environ["CI_REPOSITORY_URL"])
     with open("/root/.netrc","w") as f:
         f.write("machine %s\n\tlogin %s\n\tpassword %s\n"%(os.environ["CI_SERVER_HOST"],os.environ["NPA_USERNAME"],os.environ["NPA_PASSWORD"]))
 
