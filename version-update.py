@@ -12,8 +12,6 @@ def git(*args):
 def verify_env_var_presence(name):
     if name not in os.environ:
         raise Exception(f"Expected the following environment variable to be set: {name}")
-    print(name)
-    print(os.environ[name])
 
 def extract_gitlab_url_from_project_url():
     project_url = os.environ['CI_PROJECT_URL']
@@ -71,10 +69,6 @@ def tag_repo(tag):
     with open("/root/.netrc","w") as f:
         f.write("machine %s\n\tlogin %s\n\tpassword %s\n"%(os.environ["CI_SERVER_HOST"],os.environ["NPA_USERNAME"],os.environ["NPA_PASSWORD"]))
 
-    print(repository_url)
-    with open("/root/.netrc","r") as f:
-        print(f.read())
-
     git("remote", "set-url", "--push", "origin", repository_url)
     git("tag", tag)
     git("push", "origin", tag)        
@@ -97,7 +91,6 @@ def main():
         version = bump(latest)
 
     tag_repo(version)
-    print(version)
 
     return 0
 
