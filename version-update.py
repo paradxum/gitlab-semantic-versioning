@@ -66,11 +66,11 @@ def bump(latest):
 
 def tag_repo(tag):
     repository_url = os.environ["CI_REPOSITORY_URL"]
-    with open("~/.netrc","w") as f:
+    with open("/root/.netrc","w") as f:
         f.write("machine %s\n\tlogin %s\n\tpassword %s\n"%(os.environ["CI_SERVER_HOST"],os.environ["NPA_USERNAME"],os.environ["NPA_PASSWORD"]))
 
     print(repository_url)
-    with open("~/.netrc","r") as f:
+    with open("/root/.netrc","r") as f:
         print(f.read())
 
     git("remote", "set-url", "--push", "origin", repository_url)
