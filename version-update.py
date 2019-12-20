@@ -45,7 +45,7 @@ def get_bump_tag_from_merge_message():
     matches = re.search(r'(-bump-minor-|-bump-major-)', message.decode("utf-8"), re.M|re.I)
     if matches == None:
         return []
-    return matches.group(2)
+    return matches.group(1)
 
 
 def bump(latest):
